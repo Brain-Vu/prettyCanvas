@@ -1,0 +1,14 @@
+{
+  "name" : "prettyCanvas",
+  "description" : "making canvas a little easier to look at",
+  "version" : "1.0",
+  "manifest_version" : 3, 
+  "action" : {
+    "default_popup" : "main.html",
+    "default_icon" : "canvas_logo.png"
+  },
+	"permissions" : [],
+	"host_permissions" : [
+	  "https://seattleu.instructure.com/"
+	]
+}

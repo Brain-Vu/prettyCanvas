@@ -1,0 +1,40 @@
+
+show list of all due assignments (including overdue)
+
+basic user actions
+- authentication with Instructure -> need to figure out how to save the key
+- see a list of all the assignments 
+
+front end -> backend api -> database
+
+user logs in with canvas auth -> cache auth in browser / locally -> backend retrieves assignment information -> frontend displays
+
+user log in 
+- user id 
+- user password
+- auth key
+
+
+
+
+
+- my project is to make a canvas prettifier
+- basically microsoft teams over canvas
+
+- webapp
+- react front end
+- nodejs backend`
+
+
+MVP
+- user sign in (authenticates) store the auth key securely to enable one time sign in
+
+- display their assignmments, update the website with a refresh button (or auto refresh every hour or login)
+
+- show grades
+
+- each assignmment has a link to the assignmment (or mmmaybe a interfacce to directly turn in your assignmments through the app)
+
+nice to have:
+- 
+
