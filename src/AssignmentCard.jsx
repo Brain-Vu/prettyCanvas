@@ -7,10 +7,9 @@ import ExpandMore from '@mui/icons-material/ExpandMore'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import Collapse from '@mui/material/Collapse'
 import List from '@mui/material/List'
+import './css/AssignmentCard.css'
 
-function AssignmentCard({ name, course, dueDate }) {
-  const [courses, setCourses] = useState(null)
-
+function AssignmentCard({ assignmentName, course, dueDate }) {
   const [open, setOpen] = useState(false)
 
   const handleClick = () => {
@@ -20,7 +19,11 @@ function AssignmentCard({ name, course, dueDate }) {
   return (
     <>
       <ListItemButton onClick={handleClick}>  
-        <ListItemText primary="Assignment"/>
+        <ListItemText
+          className="assignment-text" 
+          primary={assignmentName} 
+          secondary={course + ' * ' + dueDate}
+        />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
 

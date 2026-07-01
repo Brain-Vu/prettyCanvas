@@ -13,10 +13,11 @@ const ASSIGNMENTS_QUERY = '?include[]=term&per_page=150';
 export function filterEndDate(courses) {
 	const today = new Date();
 	return courses.filter((course) => {
-    if (course['term'] == null || course['term']['end_at'] == null)
+		if (course['term'] == null || course['term']['end_at'] == null)
         return false;
     const courseEnd = new Date(course['term']['end_at']);
-    return courseEnd > today;
+    // hard coding term to Spring for testing purposes
+		return courseEnd > today || course['term']['name'] == '26SQ Spring Quarter 2026';
   });
 } 
 
@@ -78,6 +79,7 @@ export async function getAllAssignmentsAsync(courses) {
 		try {
       const ID = course['id'];
 			let assignments = await getAssignmentsAsync(ID);
+      // adding course ID as an additional field
       for (let assignment of assignments){
         assignment['course_id'] = ID;
       }

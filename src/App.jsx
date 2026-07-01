@@ -15,14 +15,20 @@ function App() {
     async function loadAssignments(){
       let filteredAssignments = await assignmentLogic()
       setAssignments(filteredAssignments)
+ 
     }
     loadAssignments()
   }, [])
-  
+
   return (
     <>
-      {assignments ? console.log(assignments) : 'b'}
-      <AssignmentCard></AssignmentCard>
+      {assignments ? assignments.map(assignment =>
+				<AssignmentCard 
+          assignmentName={assignment['name']} 
+          course={assignment['course_id']} 
+          dueDate={assignment['due_at'] ? assignment['due_at'] : "Undated"}
+        />) : 'Loading'
+      }
     </>
   )
 }
