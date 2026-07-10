@@ -1,36 +1,35 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 
-import { assignmentLogic } from './scripts/apiCaller.js'
+import { assignmentLogic } from "./scripts/apiCaller.js";
 
-import AssignmentCard from './AssignmentCard.jsx'
+import AssignmentCard from "./AssignmentCard.jsx";
 
-import './css/App.css'
-
-
+import "./css/App.css";
 
 function App() {
-  const [assignments, setAssignments] = useState(null)
+  const [assignments, setAssignments] = useState(null);
 
-  useEffect (() => { 
-    async function loadAssignments(){
-      let filteredAssignments = await assignmentLogic()
-      setAssignments(filteredAssignments)
- 
+  useEffect(() => {
+    async function loadAssignments() {
+      let filteredAssignments = await assignmentLogic();
+      setAssignments(filteredAssignments);
     }
-    loadAssignments()
-  }, [])
+    loadAssignments();
+  }, []);
 
   return (
     <>
-      {assignments ? assignments.map(assignment =>
-				<AssignmentCard 
-          assignmentName={assignment['name']} 
-          course={assignment['course_id']} 
-          dueDate={assignment['due_at'] ? assignment['due_at'] : "Undated"}
-        />) : 'Loading'
-      }
+      {assignments
+        ? assignments.map((assignment) => (
+            <AssignmentCard
+              assignmentName={assignment["name"]}
+              course={assignment["course_name"]}
+              dueDate={assignment["due_at"]}
+            />
+          ))
+        : "Loading"}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
