@@ -1,3 +1,38 @@
+import { filterAssignments, sortAssignments } from "./assignmentCourseLogic";
+
+/*
+ * Maps category names to appropriate assignments
+ *
+ * @param {array} assignments - Array of assignments to be classified under categories
+ * @returns {map} Map with keys as category names and values of corresponding assignments
+ */
+export function mapCategoryContents(assignments) {
+  let categories = {};
+
+  categories["Due today"] = (() => {
+    const dueToday = filterAssignments(assignments, "due today");
+    return sortAssignments(dueToday, "earliest");
+  })();
+  categories["This week"] = (() => {
+    const thisWeek = filterAssignments(assignments, "in a week");
+    return sortAssignments(thisWeek, "earliest");
+  })();
+  categories["In a while"] = (() => {
+    const later = filterAssignments(assignments, "after a week");
+    return sortAssignments(later, "earliest");
+  })();
+  categories["Late"] = (() => {
+    const late = filterAssignments(assignments, "late");
+    return sortAssignments(late, "latest");
+  })();
+  categories["Undated"] = (() => {
+    // need to group by class
+    return filterAssignments(assignments, "undated");
+  })();
+
+  return categories;
+}
+
 /*
  * Formats ISO string into a date and time to display as a due date
  *
@@ -49,7 +84,7 @@ export function formatDueDate(dueDateStr) {
   const timeStr = `${hours12H}:${formatMin} ${AMorPM}`;
 
   const today = new Date();
-  const diffInHours = (due - today) / 60;
+  const diffInHours = (due - today) / 1000 / 60;
 
   if (due > today) {
     if (diffInHours < 24) return `Due today at ${timeStr}`;

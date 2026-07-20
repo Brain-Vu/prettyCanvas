@@ -7,9 +7,10 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import Collapse from "@mui/material/Collapse";
 import List from "@mui/material/List";
-import "./css/AssignmentCard.css";
 
-import { formatDueDate } from "./scripts/uiTextLogic";
+import "../css/AssignmentCard.css";
+
+import { formatDueDate } from "../scripts/uiTextLogic";
 
 function AssignmentCard({ assignmentName, course, dueDate }) {
   const [open, setOpen] = useState(false);

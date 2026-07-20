@@ -4,45 +4,6 @@ const API_ENDPOINT = "/api/v1";
 const COURSES_QUERY = "?include[]=term&per_page=100";
 const ASSIGNMENTS_QUERY = "?include[]=term&per_page=150";
 
-/*
- * Filters a list of courses to only include those whose ending date has not yet been passed
- *
- * @param {array} courses - Array of all courses to be filtered
- * @returns {array} All courses filtered by end date
- */
-export function filterEndDate(courses) {
-  const today = new Date();
-  return courses.filter((course) => {
-    if (course["term"] == null || course["term"]["end_at"] == null)
-      return false;
-    const courseEnd = new Date(course["term"]["end_at"]);
-    // hard coding term to Spring for testing purposes
-    return (
-      courseEnd > today || course["term"]["name"] == "26SQ Spring Quarter 2026"
-    );
-  });
-}
-
-/*
- * General function to fetch data from Canvas based on a URL
- *
- * @param {string} URL - A specific URL to fetch from
- * @param {string} errorMssg - A specific message to display if fetch fails
- * @returns {array} The data, which is usually a list of JSONs that represents whatever data is trying to be accessed
- */
-async function getCanvasData(URL, errorMssg) {
-  try {
-    const response = await fetch(URL);
-
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    throw new Error(`{errorMssg}: ${error.message}`);
-  }
-}
 
 /*
  * Gets all courses
@@ -92,4 +53,25 @@ export async function getAllAssignmentsAsync(courses) {
     }
   }
   return allAssignments;
+}
+
+/*
+ * General function to fetch data from Canvas based on a URL
+ *
+ * @param {string} URL - A specific URL to fetch from
+ * @param {string} errorMssg - A specific message to display if fetch fails
+ * @returns {array} The data, which is usually a list of JSONs that represents whatever data is trying to be accessed
+ */
+async function getCanvasData(URL, errorMssg) {
+  try {
+    const response = await fetch(URL);
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw new Error(`${errorMssg}: ${error.message}`);
+  }
 }

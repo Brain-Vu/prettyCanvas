@@ -1,33 +1,30 @@
 import { useState, useEffect } from "react";
 
-import { assignmentLogic } from "./scripts/apiCaller.js";
+import CategoryList from "./components/CategoryList.jsx";
 
-import AssignmentCard from "./AssignmentCard.jsx";
+import { getAllAssignments } from "./scripts/assignmentCourseLogic.js";
+import { mapCategoryContents } from "./scripts/uiTextLogic.js";
 
 import "./css/App.css";
 
 function App() {
   const [assignments, setAssignments] = useState(null);
+  const [categories, setCategories] = useState(null);
 
   useEffect(() => {
-    async function loadAssignments() {
-      let filteredAssignments = await assignmentLogic();
-      setAssignments(filteredAssignments);
+    async function loadContent() {
+      let allAssignments = await getAllAssignments();
+      setAssignments(allAssignments);
+
+      const categoryMap = mapCategoryContents(allAssignments);
+      setCategories(categoryMap);
     }
-    loadAssignments();
+    loadContent();
   }, []);
 
   return (
     <>
-      {assignments
-        ? assignments.map((assignment) => (
-            <AssignmentCard
-              assignmentName={assignment["name"]}
-              course={assignment["course_name"]}
-              dueDate={assignment["due_at"]}
-            />
-          ))
-        : "Loading"}
+      <CategoryList assignments={assignments} categories={categories}/>
     </>
   );
 }
