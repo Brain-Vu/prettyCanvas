@@ -1,4 +1,8 @@
-import { filterAssignments, sortAssignments } from "./assignmentCourseLogic";
+import {
+  filterAssignments,
+  sortAssignments,
+  groupAssignments,
+} from "./assignmentCourseLogic";
 
 /*
  * Maps category names to appropriate assignments
@@ -9,26 +13,37 @@ import { filterAssignments, sortAssignments } from "./assignmentCourseLogic";
 export function mapCategoryContents(assignments) {
   let categories = {};
 
+  const unsubmitted = filterAssignments(assignments, "unsubmitted");
+
+  categories["Submitted"] = (() => {
+    const submitted = filterAssignments(assignments, "submitted");
+    return groupAssignments(submitted, "course name");
+  })();
   categories["Due today"] = (() => {
-    const dueToday = filterAssignments(assignments, "due today");
+    const dueToday = filterAssignments(unsubmitted, "due today");
     return sortAssignments(dueToday, "earliest");
   })();
   categories["This week"] = (() => {
-    const thisWeek = filterAssignments(assignments, "in a week");
+    const thisWeek = filterAssignments(unsubmitted, "in a week");
     return sortAssignments(thisWeek, "earliest");
   })();
   categories["In a while"] = (() => {
-    const later = filterAssignments(assignments, "after a week");
+    const later = filterAssignments(unsubmitted, "after a week");
     return sortAssignments(later, "earliest");
   })();
   categories["Late"] = (() => {
-    const late = filterAssignments(assignments, "late");
+    const late = filterAssignments(unsubmitted, "late");
     return sortAssignments(late, "latest");
   })();
   categories["Undated"] = (() => {
-    // need to group by class
-    return filterAssignments(assignments, "undated");
+    const undated = filterAssignments(unsubmitted, "undated");
+    return groupAssignments(undated, "course name");
   })();
+
+  // removing any empty categories
+  for (const k of Object.keys(categories)) {
+    if (categories[k].length == 0) delete categories[k];
+  }
 
   return categories;
 }

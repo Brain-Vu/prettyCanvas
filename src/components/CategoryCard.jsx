@@ -32,6 +32,7 @@ function CategoryCard({ categoryName, assignments }) {
                   assignmentName={assignment["name"]}
                   course={assignment["course_name"]}
                   dueDate={assignment["due_at"]}
+                  submitted={assignment["has_submitted_submissions"]}
                 />
               ))
             : "Loading"}

@@ -101,8 +101,10 @@ export function filterCourses(courses, by) {
  */
 export function sortAssignments(assignments, by) {
   let sortFunc;
-  if (by == "earliest") sortFunc = (a, b) => a["due_at"] < b["due_at"];
-  else if (by == "latest") sortFunc = (a, b) => a["due_at"] > b["due_at"];
+  if (by == "earliest")
+    sortFunc = (a, b) => a["due_at"].localeCompare(b["due_at"]);
+  else if (by == "latest")
+    sortFunc = (a, b) => b["due_at"].localeCompare(a["due_at"]);
   return assignments.sort(sortFunc);
 }
 
@@ -111,6 +113,8 @@ export function sortAssignments(assignments, by) {
  *
  * @param {array} assignments - Array of assignments
  * @param {string} by - String to specify how assignments should be filtered
+ *    - "submitted"
+ *    - "unsubmitted"
  *    - "dated"
  *    - "undated"
  *    - "due today"
@@ -135,12 +139,15 @@ export function filterAssignments(assignments, by) {
 
   let filterFunc;
 
-  if (by == "dated") filterFunc = (a) => dated(a);
+  if (by == "submitted") filterFunc = (a) => a["has_submitted_submissions"];
+  else if (by == "unsubmitted")
+    filterFunc = (a) => !a["has_submitted_submissions"];
+  else if (by == "dated") filterFunc = (a) => dated(a);
   else if (by == "undated") filterFunc = (a) => !dated(a);
   else if (by == "due today")
-    filterFunc = (a) => dated(a) && calcDueDiff(a) <= 1;
+    filterFunc = (a) => dated(a) && calcDueDiff(a) <= 1 && calcDueDiff >= 0;
   else if (by == "in a week")
-    filterFunc = (a) => dated(a) && calcDueDiff(a) <= 7;
+    filterFunc = (a) => dated(a) && calcDueDiff(a) <= 7 && calcDueDiff(a) > 1;
   else if (by == "after a week")
     filterFunc = (a) => dated(a) && calcDueDiff(a) > 7;
   else if (by == "late") filterFunc = (a) => dated(a) && calcDueDiff(a) < 0;
@@ -159,5 +166,5 @@ export function filterAssignments(assignments, by) {
 export function groupAssignments(assignments, by) {
   let groupFunc;
   if (by == "course name") groupFunc = (a) => a["course_name"];
-  return assignments.groupBy(groupFunc);
+  return Object.values(Object.groupBy(assignments, groupFunc)).flat();
 }
