@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import StarBorder from "@mui/icons-material/StarBorder";
 import ListItemText from "@mui/material/ListItemText";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import Collapse from "@mui/material/Collapse";
-import List from "@mui/material/List";
 
+import AssignmentList from "./AssignmentList";
 import AssignmentCard from "./AssignmentCard";
 
 function CategoryCard({ categoryName, assignments, isLate }) {
@@ -25,20 +23,7 @@ function CategoryCard({ categoryName, assignments, isLate }) {
       </ListItemButton>
 
       <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          {assignments
-            ? assignments.map((assignment) => (
-                <AssignmentCard
-                  assignmentName={assignment["name"]}
-                  course={assignment["course_name"]}
-                  dueDate={assignment["due_at"]}
-                  submitted={assignment["has_submitted_submissions"]}
-                  isLate={isLate}
-                  url={assignment["html_url"]}
-                />
-              ))
-            : "Loading"}
-        </List>
+        <AssignmentList assignments={assignments} isLate={isLate} />
       </Collapse>
     </>
   );

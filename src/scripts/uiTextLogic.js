@@ -4,19 +4,18 @@ import {
   groupAssignments,
 } from "./assignmentCourseLogic";
 
-
-/* 
+/*
  * Maps tab names to appropriate categories
- * 
- * @returns {object} Objects with keys of tab names and values of arrays of categories 
-*/
+ *
+ * @returns {object} Objects with keys of tab names and values of arrays of categories
+ */
 export function mapTabCategories() {
   return {
-    "Upcoming": ["Due today", "This week", "In a while"],
-    "Late": ["Late"],
-    "Submitted": ["Submitted"],
-    "Undated": ["Undated"]
-  }
+    Upcoming: ["Due today", "This week", "In a while"],
+    Late: ["Late"],
+    Submitted: ["Submitted"],
+    Undated: ["Undated"],
+  };
 }
 
 /*
@@ -54,11 +53,6 @@ export function mapCategoryContents(assignments) {
     const undated = filterAssignments(unsubmitted, "undated");
     return groupAssignments(undated, "course name");
   })();
-
-  // removing any empty categories
-  // for (const k of Object.keys(categories)) {
-  //   if (categories[k].length == 0) delete categories[k];
-  // }
 
   return categories;
 }

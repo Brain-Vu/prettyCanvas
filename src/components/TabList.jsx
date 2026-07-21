@@ -26,7 +26,9 @@ export default function TabList({
   return error ? (
     "Unable to load assignments. Please check that you've logged into and opened Canvas."
   ) : !assignments ? (
-    <CircularProgress color="black" />
+    <Box>
+      <CircularProgress color="black" />
+    </Box>
   ) : (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "black" }}>
