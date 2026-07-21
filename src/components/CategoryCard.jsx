@@ -10,7 +10,7 @@ import List from "@mui/material/List";
 
 import AssignmentCard from "./AssignmentCard";
 
-function CategoryCard({ categoryName, assignments }) {
+function CategoryCard({ categoryName, assignments, isLate }) {
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
@@ -33,6 +33,7 @@ function CategoryCard({ categoryName, assignments }) {
                   course={assignment["course_name"]}
                   dueDate={assignment["due_at"]}
                   submitted={assignment["has_submitted_submissions"]}
+                  isLate={isLate}
                 />
               ))
             : "Loading"}

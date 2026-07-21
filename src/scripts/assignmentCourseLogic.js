@@ -26,6 +26,7 @@ export async function getAllAssignments() {
   }
 
   const allCourses = await getCourses();
+  if (!allCourses)  return false;
   const filteredCourses = filterCourses(allCourses, "before end");
   const allAssignments = await getCourseAssignments(filteredCourses);
   return allAssignments;
@@ -44,6 +45,7 @@ async function getCourses() {
     courses = await canvasAPI.getCoursesAsync();
   } catch (error) {
     console.log(`Error: ${error.message}`);
+    return false;
   }
   return courses;
 }
@@ -123,7 +125,6 @@ export function sortAssignments(assignments, by) {
  *    - "late"
  * @returns {array} Filtered assignments
  */
-
 export function filterAssignments(assignments, by) {
   // function that checks if a due date exist for this assignments
   const dated = (a) => a["due_at"];

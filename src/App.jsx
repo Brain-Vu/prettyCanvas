@@ -10,21 +10,28 @@ import "./css/App.css";
 function App() {
   const [assignments, setAssignments] = useState(null);
   const [categories, setCategories] = useState(null);
+  const [errored, setErrored] = useState(false);
 
   useEffect(() => {
     async function loadContent() {
       let allAssignments = await getAllAssignments();
-      setAssignments(allAssignments);
+        console.log(allAssignments)
+      
 
-      const categoryMap = mapCategoryContents(allAssignments);
-      setCategories(categoryMap);
+      if (!allAssignments) setErrored(true);
+      else {
+        console.log("printed true")
+        setAssignments(allAssignments);
+        const categoryMap = mapCategoryContents(allAssignments);
+        setCategories(categoryMap);
+      }
     }
     loadContent();
   }, []);
 
   return (
     <>
-      <CategoryList assignments={assignments} categories={categories}/>
+      <CategoryList assignments={assignments} categories={categories} error={errored} />
     </>
   );
 }

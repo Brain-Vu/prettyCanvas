@@ -12,24 +12,42 @@ import "../css/AssignmentCard.css";
 
 import { formatDueDate } from "../scripts/uiTextLogic";
 
-function AssignmentCard({ assignmentName, course, dueDate, submitted }) {
-  const [open, setOpen] = useState(false);
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
+function AssignmentCard({
+  assignmentName,
+  course,
+  dueDate,
+  submitted,
+  isLate,
+}) {
+  const handleClick = () => {};
 
   return (
     <>
       <ListItemButton onClick={handleClick}>
+        {" "}
         <ListItemText
           className="assignment-text"
           primary={assignmentName}
           secondary={
-            course + " * " + (submitted ? "Submitted" : formatDueDate(dueDate))
+            submitted ? (
+              "Submitted"
+            ) : (
+              <>
+                {course} 
+                {!isLate ? (
+                  " * " + formatDueDate(dueDate)
+                ) : (
+                  <>
+                    <br />
+                    <span style={{ color: "red" }}>
+                      {formatDueDate(dueDate)}
+                    </span>
+                  </>
+                )}{" "}
+              </>
+            )
           }
-        />
-        {open ? <ExpandLess /> : <ExpandMore />}
+        />{" "}
       </ListItemButton>
     </>
   );

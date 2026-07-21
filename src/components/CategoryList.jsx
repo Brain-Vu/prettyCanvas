@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
-
 import List from "@mui/material/List";
 import ListSubheader from "@mui/material/ListSubheader";
+import { CircularProgress } from "@mui/material";
 import { Box, Divider } from "@mui/material";
-
 import logo from "../assets/backpack_logo.png";
 import CategoryCard from "./CategoryCard.jsx";
 
-function CategoryList({ categories, assignments }) {
+function CategoryList({ categories, assignments, error }) {
   return (
     <>
       <List
@@ -31,14 +30,24 @@ function CategoryList({ categories, assignments }) {
       >
         <Divider component="li" />
 
-        {categories
-          ? Object.keys(categories).map((categoryName) => (
-              <CategoryCard
-                categoryName={categoryName}
-                assignments={categories[categoryName]}
-              />
+        {!error ? (
+          categories ? (
+            Object.keys(categories).map((categoryName) => (
+              <>
+                <CategoryCard
+                  categoryName={categoryName}
+                  assignments={categories[categoryName]}
+                  isLate={categoryName=="Late"}
+                />
+                <Divider />
+              </>
             ))
-          : "loading content"}
+          ) : (
+            <CircularProgress color="black" />
+          )
+        ) : (
+          "Unable to load assignments. Please make sure that you have logged into and opened Canvas."
+        )}
       </List>
     </>
   );
