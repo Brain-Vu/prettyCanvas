@@ -3,7 +3,7 @@ const BASE_URL = "https://seattleu.instructure.com";
 const API_ENDPOINT = "/api/v1";
 const COURSES_QUERY = "?include[]=term&per_page=100";
 const ASSIGNMENTS_QUERY = "?include[]=term&per_page=150";
-
+// add to the end &include[]=submission
 
 /*
  * Gets all courses
@@ -39,12 +39,13 @@ export async function getAllAssignmentsAsync(courses) {
 
   for (const course of courses) {
     try {
-      const ID = course["id"];
-      let assignments = await getAssignmentsAsync(ID);
+      const courseID = course["id"];
+      let assignments = await getAssignmentsAsync(courseID);
       // adding course ID as an additional field
       for (let assignment of assignments) {
         assignment["course_name"] = course["name"];
       }
+      // adding the score as an additional field
       allAssignments.push(...assignments);
     } catch (error) {
       console.log(

@@ -18,8 +18,10 @@ function AssignmentCard({
   dueDate,
   submitted,
   isLate,
+  url
 }) {
-  const handleClick = () => {};
+  const handleClick = () => {window.open(url, '_blank');
+};
 
   return (
     <>

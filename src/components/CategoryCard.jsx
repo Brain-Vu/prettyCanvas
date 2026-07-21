@@ -34,6 +34,7 @@ function CategoryCard({ categoryName, assignments, isLate }) {
                   dueDate={assignment["due_at"]}
                   submitted={assignment["has_submitted_submissions"]}
                   isLate={isLate}
+                  url={assignment["html_url"]}
                 />
               ))
             : "Loading"}
