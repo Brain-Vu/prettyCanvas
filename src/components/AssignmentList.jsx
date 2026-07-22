@@ -7,17 +7,26 @@ function AssignmentList({ assignments, isLate }) {
     <>
       <List component="div" disablePadding>
         {assignments
-          ? assignments.map((assignment) => (
-              <AssignmentCard
-                assignmentName={assignment["name"]}
-                course={assignment["course_name"]}
-                dueDate={assignment["due_at"]}
-                submitted={assignment["has_submitted_submissions"]}
-                isLate={isLate}
-                url={assignment["html_url"]}
-              />
-            ))
-          : "Nothing for now."}
+          ? assignments.map((assignment) => {
+              const hasSubmitTime =
+                assignment["has_submitted_submissions"] &&
+                Object.hasOwn(assignment, "submission") &&
+                assignment["submission"]["submitted_at"] != null;
+
+              return (
+                <AssignmentCard
+                  assignmentName={assignment["name"]}
+                  course={assignment["course_name"]}
+                  dueDate={assignment["due_at"]}
+                  submitted={assignment["has_submitted_submissions"]}
+                  isLate={isLate}
+                  url={assignment["html_url"]}
+                  hasSubmitTime={hasSubmitTime}
+                  submitTime={assignment["submission"]["submitted_at"]}
+                />
+              );
+            })
+          : "Nothing for now"}
       </List>
     </>
   );

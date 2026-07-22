@@ -1,16 +1,9 @@
-import { useState, useEffect } from "react";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import StarBorder from "@mui/icons-material/StarBorder";
 import ListItemText from "@mui/material/ListItemText";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import Collapse from "@mui/material/Collapse";
-import List from "@mui/material/List";
 
 import "../css/AssignmentCard.css";
 
-import { formatDueDate } from "../scripts/uiTextLogic";
+import { formatTimestamp, formatDueDate } from "../scripts/uiTextLogic";
 
 function AssignmentCard({
   assignmentName,
@@ -18,10 +11,13 @@ function AssignmentCard({
   dueDate,
   submitted,
   isLate,
-  url
+  url,
+  hasSubmitTime,
+  submitTime,
 }) {
-  const handleClick = () => {window.open(url, '_blank');
-};
+  const handleClick = () => {
+    window.open(url, "_blank");
+  };
 
   return (
     <>
@@ -32,10 +28,14 @@ function AssignmentCard({
           primary={assignmentName}
           secondary={
             submitted ? (
-              "Submitted"
+              hasSubmitTime ? (
+                `Submitted on ${formatTimestamp(submitTime)}`
+              ) : (
+                "Submitted, no submission time on record"
+              )
             ) : (
               <>
-                {course} 
+                {course}
                 {!isLate ? (
                   " * " + formatDueDate(dueDate)
                 ) : (

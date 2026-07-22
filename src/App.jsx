@@ -21,7 +21,7 @@ function App() {
   useEffect(() => {
     async function loadContent() {
       let allAssignments = await getAllAssignments();
-
+      console.log(allAssignments)
       if (!allAssignments) setErrored(true);
       else {
         const catAssignMap = mapCategoryContents(allAssignments);

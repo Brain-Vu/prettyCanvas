@@ -2,8 +2,7 @@
 const BASE_URL = "https://seattleu.instructure.com";
 const API_ENDPOINT = "/api/v1";
 const COURSES_QUERY = "?include[]=term&per_page=100";
-const ASSIGNMENTS_QUERY = "?include[]=term&per_page=150";
-// add to the end &include[]=submission
+const ASSIGNMENTS_QUERY = "?include[]=term&per_page=150&include[]=submission";
 
 /*
  * Gets all courses

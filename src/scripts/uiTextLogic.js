@@ -58,13 +58,32 @@ export function mapCategoryContents(assignments) {
 }
 
 /*
- * Formats ISO string into a date and time to display as a due date
+ * Creates a time string based on a timestamp
  *
- * @param {string} time - An ISO string
- * @returns {string} The date string to display as the due date
+ * @param {string} timestamp - An ISO string
+ * @returns {string} Time string in the form "{HOURS}:{MINUTES} {AM or PM}"
  */
-export function formatDueDate(dueDateStr) {
+function formatTimeStr(timestamp) {
+  const date = new Date(timestamp);
+  const rawMin = date.getMinutes();
+  const rawHour = date.getHours();
+  const AMorPM = rawHour >= 12 ? "AM" : "PM";
+  const formatMin = rawMin < 10 ? `0${rawMin}` : rawMin;
+  let hours12H = rawHour;
+  if (hours12H > 12) hours12H -= 12;
+  else if (hours12H == 0) hours12H = 12;
+  return `${hours12H}:${formatMin} ${AMorPM}`;
+}
+
+/*
+ * Creates a date string based on a timestamp
+ *
+ * @param {string} timestamp - An ISO string
+ * @returns {string} Date string in the form "{MONTH} {DAY}, {YEAR}"
+ */
+function formatDateStr(timestamp) {
   const dayStrs = [
+    // unused, for now...
     "Sunday",
     "Monday",
     "Tuesday",
@@ -87,25 +106,35 @@ export function formatDueDate(dueDateStr) {
     "November",
     "December",
   ];
+  const date = new Date(timestamp);
+  const rawYear = date.getFullYear();
+  const rawMonth = date.getMonth();
+  const rawDay = date.getDate();
+  return `${monthStrs[rawMonth]} ${rawDay}, ${rawYear}`;
+}
 
-  const due = new Date(dueDateStr);
-  if (!dueDateStr) return "Undated";
+/*
+ *  Formats ISO timestamp as a combination of formatted date and time string
+ *
+ *  @param {string} timestamp - An ISO string
+ *  @returns {string} A formatted timestamp string
+ */
+export function formatTimestamp(timestamp) {
+  return `${formatDateStr(timestamp)} at ${formatTimeStr(timestamp)}`;
+}
 
-  const rawYear = due.getFullYear();
-  const rawMonth = due.getMonth();
-  const rawDay = due.getDate();
-  const rawHour = due.getHours();
-  const rawMin = due.getMinutes();
+/*
+ * Formats ISO timestamp to display as a due date
+ *
+ * @param {string} timestamp - An ISO string
+ * @returns {string} A formatted string to display as the due date
+ */
+export function formatDueDate(timestamp) {
+  const due = new Date(timestamp);
+  if (!timestamp) return "Undated";
 
-  let hours12H = rawHour;
-  if (hours12H > 12) hours12H -= 12;
-  else if (hours12H == 0) hours12H = 12;
-
-  const formatMin = rawMin < 10 ? `0${rawMin}` : rawMin;
-  const AMorPM = rawHour >= 12 ? "AM" : "PM";
-
-  const dateStr = `${monthStrs[rawMonth]} ${rawDay}, ${rawYear}`;
-  const timeStr = `${hours12H}:${formatMin} ${AMorPM}`;
+  const dateStr = formatDateStr(timestamp);
+  const timeStr = formatTimeStr(timestamp);
 
   const today = new Date();
   const diffInHours = (due - today) / 1000 / 60;
@@ -115,6 +144,6 @@ export function formatDueDate(dueDateStr) {
     else if (diffInHours < 48) return `Due tomorrow at ${timeStr}`;
     else return `Due ${dateStr} at ${timeStr}`;
   } else {
-    return `Late, assignment was due on ${dateStr} at ${timeStr}`;
+    return `Late, assignment was due on ${formatTimestamp(timestamp)}`;
   }
 }
