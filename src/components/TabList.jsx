@@ -10,12 +10,15 @@ function CustomTabPanel({ children, currTabIndex, myTabIndex }) {
     </div>
   );
 }
+
 //------------------------------------------------------------------------
+
 export default function TabList({
   assignments,
+  courses,
   catAssignMap,
   tabCatMap,
-  error,
+  errored,
 }) {
   const [tabIndex, setTabIndex] = useState(0);
 
@@ -23,7 +26,7 @@ export default function TabList({
     setTabIndex(newTabIndex);
   };
 
-  return error ? (
+  return errored ? (
     "Unable to load assignments. Please check that you've logged into and opened Canvas."
   ) : !assignments ? (
     <Box>
@@ -33,9 +36,9 @@ export default function TabList({
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "black" }}>
         <Tabs value={tabIndex} onChange={changeTab}>
-          <Tab label="Upcoming" />
-          <Tab label="Past Due" />
-          <Tab label="Completed" />
+          {Object.keys(tabCatMap).map((tabName) => (
+            <Tab label={tabName} />
+          ))}
         </Tabs>
       </Box>
 
@@ -44,6 +47,7 @@ export default function TabList({
           <CategoryList
             categoryNames={tabCatMap[tabName]}
             catAssignMap={catAssignMap}
+            tabName={tabName}
           ></CategoryList>
         </CustomTabPanel>
       ))}

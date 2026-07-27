@@ -9,14 +9,34 @@ function AssignmentCard({
   assignmentName,
   course,
   dueDate,
-  submitted,
-  isLate,
   url,
+  tabName,
+  isLate, 
   hasSubmitTime,
   submitTime,
+  isGraded,
+  score,
+  totalPoints,
 }) {
   const handleClick = () => {
     window.open(url, "_blank");
+  };
+
+  const makeDescription = () => {
+    if (tabName=="Completed") {
+      return hasSubmitTime
+        ? `Submitted on ${formatTimestamp(submitTime)}`
+        : "Submitted, no submission time on record";
+    } else {
+      return tabName=="Late" ? (
+        <>
+          <br />
+          <span style={{ color: "red" }}>{formatDueDate(dueDate)}</span>
+        </>
+      ) : (
+        formatDueDate(dueDate)
+      );
+    }
   };
 
   return (
@@ -27,29 +47,14 @@ function AssignmentCard({
           className="assignment-text"
           primary={assignmentName}
           secondary={
-            submitted ? (
-              hasSubmitTime ? (
-                `Submitted on ${formatTimestamp(submitTime)}`
-              ) : (
-                "Submitted, no submission time on record"
-              )
-            ) : (
-              <>
-                {course}
-                {!isLate ? (
-                  " * " + formatDueDate(dueDate)
-                ) : (
-                  <>
-                    <br />
-                    <span style={{ color: "red" }}>
-                      {formatDueDate(dueDate)}
-                    </span>
-                  </>
-                )}{" "}
-              </>
-            )
+            <>
+              {course}
+              <br />
+              {makeDescription()}
+            </>
           }
         />{" "}
+        {isGraded ? `${score}/${totalPoints}` : ""}
       </ListItemButton>
     </>
   );

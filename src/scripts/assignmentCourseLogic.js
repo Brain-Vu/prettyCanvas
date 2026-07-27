@@ -1,35 +1,36 @@
 import * as canvasAPI from "./canvasAPI.js";
 
 /*
- * Driver function to access assignments from Canvas
+ * Driver function to access courses and assignments from Canvas
  *
- * @returns {array} Array of JSONs representing all assignments
+ * @returns {array} Array of arrays of courses and assignments
  */
-export async function getAllAssignments() {
+export async function getCoursesAssignments() {
   // test function to make sure that classes from Spring quarter are populated
-  function filterCourses(courses, by) {
-    let filterFunc;
-    if (by == "before end") {
-      const today = new Date();
-      filterFunc = (course) => {
-        if (course["term"] == null || course["term"]["end_at"] == null)
-          return false;
-        const courseEnd = new Date(course["term"]["end_at"]);
-        // hard coding term to Spring for testing purposes
-        return (
-          courseEnd > today ||
-          course["term"]["name"] == "26SQ Spring Quarter 2026"
-        );
-      };
-    }
-    return courses.filter(filterFunc);
-  }
+  // function filterCourses(courses, by) {
+  //   let filterFunc;
+  //   if (by == "before end") {
+  //     const today = new Date();
+  //     filterFunc = (course) => {
+  //       if (course["term"] == null || course["term"]["end_at"] == null)
+  //         return false;
+  //       const courseEnd = new Date(course["term"]["end_at"]);
+  //       // hard coding term to Spring for testing purposes
+  //       return (
+  //         courseEnd > today ||
+  //         course["term"]["name"] == "26SQ Spring Quarter 2026"
+  //       );
+  //     };
+  //   }
+  //   return courses.filter(filterFunc);
+  // }
 
   const allCourses = await getCourses();
-  if (!allCourses)  return false;
+  if (!allCourses) return false;
   const filteredCourses = filterCourses(allCourses, "before end");
+  const allCourseNames = filteredCourses.map((c) => c["name"]);
   const allAssignments = await getCourseAssignments(filteredCourses);
-  return allAssignments;
+  return [allCourseNames, allAssignments];
 }
 
 // ----------- API callers ----------- //
@@ -104,9 +105,19 @@ export function filterCourses(courses, by) {
 export function sortAssignments(assignments, by) {
   let sortFunc;
   if (by == "earliest")
-    sortFunc = (a, b) => a["due_at"].localeCompare(b["due_at"]);
+    sortFunc = (a, b) => {
+      if (!a["due_at"] && !b["due_at"]) return 0;
+      else if (!a["due_at"]) return 1;
+      else if (!b["due_at"]) return -1;
+      a["due_at"].localeCompare(b["due_at"]);
+    };
   else if (by == "latest")
-    sortFunc = (a, b) => b["due_at"].localeCompare(a["due_at"]);
+    sortFunc = (a, b) => {
+      if (!a["due_at"] && !b["due_at"]) return 0;
+      else if (!a["due_at"]) return 1;
+      else if (!b["due_at"]) return -1;
+      b["due_at"].localeCompare(a["due_at"]);
+    };
   return assignments.sort(sortFunc);
 }
 
@@ -115,34 +126,38 @@ export function sortAssignments(assignments, by) {
  *
  * @param {array} assignments - Array of assignments
  * @param {string} by - String to specify how assignments should be filtered
- *    - "submitted"
- *    - "unsubmitted"
+ *    - "completed" - has a submission or has a grade
+ *    - "incomplete" - anything not complete
  *    - "dated"
  *    - "undated"
  *    - "due today"
  *    - "in a week"
  *    - "after a week"
  *    - "late"
+ *    - "course"
  * @returns {array} Filtered assignments
  */
-export function filterAssignments(assignments, by) {
+export function filterAssignments(assignments, by, courseName = "") {
+  // function checks if an assignment has a submission or is marked as graded
+  const completed = (a) =>
+    a["has_submitted_submissions"] ||
+    (Object.hasOwn(a, "submission") &&
+      a["submission"]["workflow_state"] == "graded");
+
   // function that checks if a due date exist for this assignments
   const dated = (a) => a["due_at"];
 
   // function to calculate how many days remain till due date
   const today = new Date();
   const todayStr = today.toISOString();
-
   const calcDueDiff = (a) => {
     const due = new Date(a["due_at"]);
     return (due - today) / 1000 / 60 / 24;
   };
 
   let filterFunc;
-
-  if (by == "submitted") filterFunc = (a) => a["has_submitted_submissions"];
-  else if (by == "unsubmitted")
-    filterFunc = (a) => !a["has_submitted_submissions"];
+  if (by == "completed") filterFunc = completed;
+  else if (by == "incomplete") filterFunc = (a) => !completed(a);
   else if (by == "dated") filterFunc = (a) => dated(a);
   else if (by == "undated") filterFunc = (a) => !dated(a);
   else if (by == "due today")
@@ -152,7 +167,7 @@ export function filterAssignments(assignments, by) {
   else if (by == "after a week")
     filterFunc = (a) => dated(a) && calcDueDiff(a) > 7;
   else if (by == "late") filterFunc = (a) => dated(a) && calcDueDiff(a) < 0;
-
+  else if (by == "course") filterFunc = (a) => a["course_name"] == courseName;
   return assignments.filter(filterFunc);
 }
 

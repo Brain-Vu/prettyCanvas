@@ -1,9 +1,8 @@
 import { Divider } from "@mui/material";
-import logo from "../assets/backpack_logo.png";
 import CategoryCard from "./CategoryCard.jsx";
 import AssignmentList from "./AssignmentList.jsx";
 
-function CategoryList({ categoryNames, catAssignMap }) {
+function CategoryList({ categoryNames, catAssignMap, tabName }) {
   return (
     <>
       {categoryNames.every((category) => catAssignMap[category].length == 0) ? (
@@ -14,7 +13,7 @@ function CategoryList({ categoryNames, catAssignMap }) {
       ) : categoryNames.length == 1 ? (
         <AssignmentList
           assignments={catAssignMap[categoryNames[0]]}
-          isLate={categoryNames[0] == "Late"}
+          tabName={tabName}
         />
       ) : (
         categoryNames.map((categoryName) => (
@@ -22,7 +21,7 @@ function CategoryList({ categoryNames, catAssignMap }) {
             <CategoryCard
               categoryName={categoryName}
               assignments={catAssignMap[categoryName]}
-              isLate={categoryName == "Late"}
+              tabName={tabName}
             />
             <Divider />
           </>

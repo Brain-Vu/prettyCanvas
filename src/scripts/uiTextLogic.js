@@ -7,13 +7,14 @@ import {
 /*
  * Maps tab names to appropriate categories
  *
+ * @param {array} courses - Array of course names to be categorized under the "Completed" tab
  * @returns {object} Objects with keys of tab names and values of arrays of categories
  */
-export function mapTabCategories() {
+export function mapTabCategories(courses) {
   return {
     Upcoming: ["Due today", "This week", "In a while"],
     Late: ["Late"],
-    Submitted: ["Submitted"],
+    Completed: courses,
     Undated: ["Undated"],
   };
 }
@@ -24,33 +25,38 @@ export function mapTabCategories() {
  * @param {array} assignments - Array of assignments to be classified under categories
  * @returns {object} Object with keys as category names and values of arrays of assignments
  */
-export function mapCategoryContents(assignments) {
+export function mapCategoryContents(assignments, courses) {
   let categories = {};
 
-  const unsubmitted = filterAssignments(assignments, "unsubmitted");
+  const completed = filterAssignments(assignments, "completed");
 
-  categories["Submitted"] = (() => {
-    const submitted = filterAssignments(assignments, "submitted");
-    return groupAssignments(submitted, "course name");
-  })();
+  for (const course of courses) {
+    categories[course] = (() => {
+      const courseFiltered = filterAssignments(completed, "course", course);
+      return sortAssignments(courseFiltered, "latest");
+    })();
+  }
+
+  const incomplete = filterAssignments(assignments, "incomplete");
+
   categories["Due today"] = (() => {
-    const dueToday = filterAssignments(unsubmitted, "due today");
+    const dueToday = filterAssignments(incomplete, "due today");
     return sortAssignments(dueToday, "earliest");
   })();
   categories["This week"] = (() => {
-    const thisWeek = filterAssignments(unsubmitted, "in a week");
+    const thisWeek = filterAssignments(incomplete, "in a week");
     return sortAssignments(thisWeek, "earliest");
   })();
   categories["In a while"] = (() => {
-    const later = filterAssignments(unsubmitted, "after a week");
+    const later = filterAssignments(incomplete, "after a week");
     return sortAssignments(later, "earliest");
   })();
   categories["Late"] = (() => {
-    const late = filterAssignments(unsubmitted, "late");
+    const late = filterAssignments(incomplete, "late");
     return sortAssignments(late, "latest");
   })();
   categories["Undated"] = (() => {
-    const undated = filterAssignments(unsubmitted, "undated");
+    const undated = filterAssignments(incomplete, "undated");
     return groupAssignments(undated, "course name");
   })();
 

@@ -4,7 +4,7 @@ import CategoryList from "./components/CategoryList.jsx";
 import TabList from "./components/TabList.jsx";
 import Header from "./components/Header.jsx";
 
-import { getAllAssignments } from "./scripts/assignmentCourseLogic.js";
+import { getCoursesAssignments } from "./scripts/assignmentCourseLogic.js";
 import {
   mapCategoryContents,
   mapTabCategories,
@@ -14,19 +14,21 @@ import "./css/App.css";
 
 function App() {
   const [assignments, setAssignments] = useState(null);
+  const [courses, setCourses] = useState(null);
   const [errored, setErrored] = useState(false);
   const [categories, setCategories] = useState(null);
   const [tabs, setTabs] = useState(null);
 
   useEffect(() => {
     async function loadContent() {
-      let allAssignments = await getAllAssignments();
-      console.log(allAssignments)
+      let [allCourses, allAssignments] = await getCoursesAssignments();
+      console.log(allAssignments);
       if (!allAssignments) setErrored(true);
       else {
-        const catAssignMap = mapCategoryContents(allAssignments);
-        const tabCatMap = mapTabCategories();
+        const catAssignMap = mapCategoryContents(allAssignments, allCourses);
+        const tabCatMap = mapTabCategories(allCourses);
         setAssignments(allAssignments);
+        setCourses(allCourses);
         setCategories(catAssignMap);
         setTabs(tabCatMap);
       }
@@ -36,10 +38,11 @@ function App() {
 
   return (
     <>
-      <Header></Header> 
-      {/* need to do the loading stuff inside tab list + center everything */}
-      {}<TabList
+      <Header></Header>
+      {}
+      <TabList
         assignments={assignments}
+        courses={courses}
         catAssignMap={categories}
         tabCatMap={tabs}
         error={errored}

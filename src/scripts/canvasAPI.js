@@ -7,7 +7,7 @@ const ASSIGNMENTS_QUERY = "?include[]=term&per_page=150&include[]=submission";
 /*
  * Gets all courses
  *
- * @returns {array} - An array of JSONs, where each JSOn represents an assignment
+ * @returns {array} - An array of JSONs, where each JSON represents a course
  */
 export async function getCoursesAsync() {
   const COURSES_URL = `${BASE_URL}${API_ENDPOINT}/courses${COURSES_QUERY}`;

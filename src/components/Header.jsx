@@ -6,6 +6,10 @@ import { Box, Divider } from "@mui/material";
 import logo from "../assets/backpack_logo.png";
 
 function CategoryList() {
+  const handleClick = () => {
+    // window.open("https://github.com/Brain-Vu/prettyCanvas", "_blank");
+  };
+
   return (
     <>
       <List
@@ -22,7 +26,12 @@ function CategoryList() {
               gap: 1,
             }}
           >
-            <Box component="img" src={logo} sx={{ width: 45 }} />
+            <Box
+              component="img"
+              src={logo}
+              sx={{ width: 45 }}
+              onClick={handleClick}
+            />
             <strong>Assignments</strong>
           </ListSubheader>
         }
