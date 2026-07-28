@@ -3,7 +3,7 @@ import ListItemText from "@mui/material/ListItemText";
 
 import "../css/AssignmentCard.css";
 
-import { formatTimestamp, formatDueDate } from "../scripts/uiTextLogic";
+import { formatTimestamp, formatDueDate } from "../scripts/UILogic";
 
 function AssignmentCard({
   assignmentName,

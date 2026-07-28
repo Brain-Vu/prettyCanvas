@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import List from "@mui/material/List";
 import ListSubheader from "@mui/material/ListSubheader";
-import { CircularProgress } from "@mui/material";
 import { Box, Divider } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import logo from "../assets/backpack_logo.png";
+import { loadContent } from "../scripts/canvasInfoLogic.js";
 
-function CategoryList() {
-  const handleClick = () => {
-    // window.open("https://github.com/Brain-Vu/prettyCanvas", "_blank");
+function Header({ refreshHandler }) {
+  const refreshClick = () => {
+    refreshHandler();
   };
 
   return (
@@ -29,10 +32,26 @@ function CategoryList() {
             <Box
               component="img"
               src={logo}
-              sx={{ width: 45 }}
-              onClick={handleClick}
-            />
+              sx={{
+                width: 45,
+              }}
+            />{" "}
             <strong>Assignments</strong>
+            <Tooltip title="Refresh">
+              <IconButton
+                onClick={refreshClick}
+                size="small"
+                sx={{
+                  ml: "auto",
+                  transition: "0.2s",
+                  "&:hover": {
+                    transform: "rotate(90deg)",
+                  },
+                }}
+              >
+                <RefreshIcon />
+              </IconButton>
+            </Tooltip>
           </ListSubheader>
         }
       >
@@ -42,4 +61,4 @@ function CategoryList() {
   );
 }
 
-export default CategoryList;
+export default Header;

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Tabs, Tab, Box, CircularProgress } from "@mui/material";
 import CategoryList from "./CategoryList";
+import { tabOrder } from "../scripts/UILogic";
 
 function CustomTabPanel({ children, currTabIndex, myTabIndex }) {
   return (
@@ -16,8 +17,8 @@ function CustomTabPanel({ children, currTabIndex, myTabIndex }) {
 export default function TabList({
   assignments,
   courses,
-  catAssignMap,
-  tabCatMap,
+  categories,
+  tabs,
   errored,
 }) {
   const [tabIndex, setTabIndex] = useState(0);
@@ -25,6 +26,8 @@ export default function TabList({
   const changeTab = (event, newTabIndex) => {
     setTabIndex(newTabIndex);
   };
+
+  const tabNames = tabOrder();
 
   return errored ? (
     "Unable to load assignments. Please check that you've logged into and opened Canvas."
@@ -36,17 +39,17 @@ export default function TabList({
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "black" }}>
         <Tabs value={tabIndex} onChange={changeTab}>
-          {Object.keys(tabCatMap).map((tabName) => (
+          {tabNames.map((tabName) => (
             <Tab label={tabName} />
           ))}
         </Tabs>
       </Box>
 
-      {Object.keys(tabCatMap).map((tabName, myTabIndex) => (
+      {tabNames.map((tabName, myTabIndex) => (
         <CustomTabPanel currTabIndex={tabIndex} myTabIndex={myTabIndex}>
           <CategoryList
-            categoryNames={tabCatMap[tabName]}
-            catAssignMap={catAssignMap}
+            categoryNames={tabs[tabName]}
+            categories={categories}
             tabName={tabName}
           ></CategoryList>
         </CustomTabPanel>

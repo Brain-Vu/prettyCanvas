@@ -1,66 +1,12 @@
-import {
-  filterAssignments,
-  sortAssignments,
-  groupAssignments,
-} from "./assignmentCourseLogic";
+
 
 /*
- * Maps tab names to appropriate categories
- *
- * @param {array} courses - Array of course names to be categorized under the "Completed" tab
- * @returns {object} Objects with keys of tab names and values of arrays of categories
- */
-export function mapTabCategories(courses) {
-  return {
-    Upcoming: ["Due today", "This week", "In a while"],
-    Late: ["Late"],
-    Completed: courses,
-    Undated: ["Undated"],
-  };
-}
-
-/*
- * Maps category names to appropriate assignments
- *
- * @param {array} assignments - Array of assignments to be classified under categories
- * @returns {object} Object with keys as category names and values of arrays of assignments
- */
-export function mapCategoryContents(assignments, courses) {
-  let categories = {};
-
-  const completed = filterAssignments(assignments, "completed");
-
-  for (const course of courses) {
-    categories[course] = (() => {
-      const courseFiltered = filterAssignments(completed, "course", course);
-      return sortAssignments(courseFiltered, "latest");
-    })();
-  }
-
-  const incomplete = filterAssignments(assignments, "incomplete");
-
-  categories["Due today"] = (() => {
-    const dueToday = filterAssignments(incomplete, "due today");
-    return sortAssignments(dueToday, "earliest");
-  })();
-  categories["This week"] = (() => {
-    const thisWeek = filterAssignments(incomplete, "in a week");
-    return sortAssignments(thisWeek, "earliest");
-  })();
-  categories["In a while"] = (() => {
-    const later = filterAssignments(incomplete, "after a week");
-    return sortAssignments(later, "earliest");
-  })();
-  categories["Late"] = (() => {
-    const late = filterAssignments(incomplete, "late");
-    return sortAssignments(late, "latest");
-  })();
-  categories["Undated"] = (() => {
-    const undated = filterAssignments(incomplete, "undated");
-    return groupAssignments(undated, "course name");
-  })();
-
-  return categories;
+ * Returns the tab order that should be displayed
+ *  
+ * @returns {array} Array of tabs that dictate the order that should be displayed
+*/
+export function tabOrder(){
+  return ["Upcoming", "Late", "Completed", "Undated"]
 }
 
 /*

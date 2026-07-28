@@ -1,13 +1,12 @@
 {
-  "manifest_version" : 3, 
-  "version" : "1.0",
-  "name" : "prettyCanvas",
-  "description" : "making canvas a little easier to look at",
-  "action" : {
-    "default_popup" : "index.html",
-    "default_icon" : "canvas_logo.png"
+  "manifest_version": 3,
+  "version": "1.0",
+  "name": "prettyCanvas",
+  "description": "making canvas a little easier to look at",
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "canvas_logo.png"
   },
-	"host_permissions" : [
-	  "https://seattleu.instructure.com/"
-	]
+  "host_permissions": ["https://seattleu.instructure.com/"],
+  "permissions": ["storage"]
 }
