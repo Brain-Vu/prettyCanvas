@@ -5,7 +5,16 @@
   "description": "making canvas a little easier to look at",
   "action": {
     "default_popup": "index.html",
-    "default_icon": "canvas_logo.png"
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
   },
   "host_permissions": ["https://seattleu.instructure.com/"],
   "permissions": ["storage"]

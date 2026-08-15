@@ -24,6 +24,14 @@ function App() {
   const [tabs, setTabs] = useState(null);
   const [errored, setErrored] = useState(false);
 
+  function setStates(assignments, courses, categories, tabs, errored) {
+    setAssignments(assignments);
+    setCourses(courses);
+    setCategories(categories);
+    setTabs(tabs);
+    setErrored(errored);
+  }
+
   useEffect(() => {
     async function load() {
       const content = await loadCachedContent();
@@ -38,7 +46,7 @@ function App() {
         [_assignments, _courses, _categories, _tabs, _errored] =
           await loadContent();
 
-      console.log(_assignments);
+      // console.log(_assignments);
 
       if (!_errored) {
         setStates(_assignments, _courses, _categories, _tabs, _errored);
@@ -54,14 +62,7 @@ function App() {
     const [_assignments, _courses, _categories, _tabs, _errored] =
       await loadContent();
     setStates(_assignments, _courses, _categories, _tabs, _errored);
-  }
-
-  function setStates(assignments, courses, categories, tabs, errored) {
-    setAssignments(assignments);
-    setCourses(courses);
-    setCategories(categories);
-    setTabs(tabs);
-    setErrored(errored);
+    saveContent(_assignments, _courses, _categories, _tabs, _errored);
   }
 
   return (

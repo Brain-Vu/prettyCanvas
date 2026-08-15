@@ -4,26 +4,31 @@ import * as canvasAPI from "./canvasAPI.js";
  * Driver function to access assignments, courses, categories, tabs, and potential error
  *
  * @returns {array} Array of content needed to render the screen
+ *    - assignments - An array of objects that each represent an assignment
+ *    - courses - An array of course name strings
+ *    - categories - Object that maps category names to assignments
+ *    - tabs - Object that maps tab names to category names
+ *    - errored - Boolean that flags if there was trouble in loading the content from Canvas
  */
 export async function loadContent() {
   // test function to make sure that classes from Spring quarter are populated
-  function filterCourses(courses, by) {
-    let filterFunc;
-    if (by == "before end") {
-      const today = new Date();
-      filterFunc = (course) => {
-        if (course["term"] == null || course["term"]["end_at"] == null)
-          return false;
-        const courseEnd = new Date(course["term"]["end_at"]);
-        // hard coding term to Spring for testing purposes
-        return (
-          courseEnd > today ||
-          course["term"]["name"] == "26SQ Spring Quarter 2026"
-        );
-      };
-    }
-    return courses.filter(filterFunc);
-  }
+  // function filterCourses(courses, by) {
+  //   let filterFunc;
+  //   if (by == "before end") {
+  //     const today = new Date();
+  //     filterFunc = (course) => {
+  //       if (course["term"] == null || course["term"]["end_at"] == null)
+  //         return false;
+  //       const courseEnd = new Date(course["term"]["end_at"]);
+  //       // hard coding term to Spring for testing purposes
+  //       return (
+  //         courseEnd > today ||
+  //         course["term"]["name"] == "26SQ Spring Quarter 2026"
+  //       );
+  //     };
+  //   }
+  //   return courses.filter(filterFunc);
+  // }
 
   // API callers
   async function getCourses() {

@@ -26,11 +26,6 @@ export async function saveContent(
   } catch (error) {
     console.log(`Error: ${error.message}`);
   }
-
-  const result = await chrome.storage.local.get("time_saved");
-console.log(result);
-
-  console.log("in cache.js, saved successfully!");
 }
 
 /*
@@ -53,5 +48,4 @@ export async function loadCachedContent() {
   } catch (error) {
     console.log(`Error: ${error.message}`);
   }
-  console.log("in cache.js, retrieved successfully!");
 }
