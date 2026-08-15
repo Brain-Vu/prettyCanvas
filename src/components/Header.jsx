@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import List from "@mui/material/List";
 import ListSubheader from "@mui/material/ListSubheader";
 import { Box, Divider } from "@mui/material";
@@ -7,7 +6,6 @@ import HelpCenterIcon from "@mui/icons-material/HelpCenter";
 import Tooltip from "@mui/material/Tooltip";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import logo from "../assets/backpack_logo.png";
-import { loadContent } from "../scripts/canvasInfoLogic.js";
 
 function Header({ refreshHandler }) {
   const helpClick = () => {
@@ -42,7 +40,7 @@ function Header({ refreshHandler }) {
             />{" "}
             <strong>Assignments</strong>
             <Box sx={{ ml: "auto", display: "flex" }}>
-              <Tooltip title="Make sure you're logged into Canvas">
+              <Tooltip title="Source code">
                 <IconButton
                   onClick={helpClick}
                   size="small"

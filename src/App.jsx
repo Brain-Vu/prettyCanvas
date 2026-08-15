@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 
-import CategoryList from "./components/CategoryList.jsx";
 import TabList from "./components/TabList.jsx";
 import Header from "./components/Header.jsx";
 
@@ -33,7 +32,7 @@ function App() {
   }
 
   useEffect(() => {
-    async function load() {
+    async function initial_load() {
       const content = await loadCachedContent();
       const cacheDelaySec = 120;
       const cacheDelayMilli = cacheDelaySec * 1000;
@@ -46,14 +45,10 @@ function App() {
         [_assignments, _courses, _categories, _tabs, _errored] =
           await loadContent();
 
-      // console.log(_assignments);
-
-      if (!_errored) {
-        setStates(_assignments, _courses, _categories, _tabs, _errored);
-      }
+      setStates(_assignments, _courses, _categories, _tabs, _errored);
       saveContent(_assignments, _courses, _categories, _tabs, _errored);
     }
-    load();
+    initial_load();
   }, []);
 
   async function refreshHandler() {
@@ -74,7 +69,7 @@ function App() {
         courses={courses}
         categories={categories}
         tabs={tabs}
-        error={errored}
+        errored={errored}
       ></TabList>
     </>
   );

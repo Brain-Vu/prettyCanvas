@@ -12,23 +12,23 @@ import * as canvasAPI from "./canvasAPI.js";
  */
 export async function loadContent() {
   // test function to make sure that classes from Spring quarter are populated
-  // function filterCourses(courses, by) {
-  //   let filterFunc;
-  //   if (by == "before end") {
-  //     const today = new Date();
-  //     filterFunc = (course) => {
-  //       if (course["term"] == null || course["term"]["end_at"] == null)
-  //         return false;
-  //       const courseEnd = new Date(course["term"]["end_at"]);
-  //       // hard coding term to Spring for testing purposes
-  //       return (
-  //         courseEnd > today ||
-  //         course["term"]["name"] == "26SQ Spring Quarter 2026"
-  //       );
-  //     };
-  //   }
-  //   return courses.filter(filterFunc);
-  // }
+  function filterCourses(courses, by) {
+    let filterFunc;
+    if (by == "before end") {
+      const today = new Date();
+      filterFunc = (course) => {
+        if (course["term"] == null || course["term"]["end_at"] == null)
+          return false;
+        const courseEnd = new Date(course["term"]["end_at"]);
+        // hard coding term to Spring for testing purposes
+        return (
+          courseEnd > today ||
+          course["term"]["name"] == "25WQ Winter Quarter 2025"
+        );
+      };
+    }
+    return courses.filter(filterFunc);
+  }
 
   // API callers
   async function getCourses() {
@@ -48,21 +48,24 @@ export async function loadContent() {
       assignments = await canvasAPI.getAllAssignmentsAsync(courses);
     } catch (error) {
       console.log(`Error: ${error.message}`);
+      return false;
     }
     return assignments;
   }
 
   const courseObj = await getCourses();
-  if (!courseObj) return false;
+  if (!courseObj) return [null, null, null, null, true];
+
   const filteredCourses = filterCourses(courseObj, "before end");
 
   const assignments = await getAssignments(filteredCourses);
+  if (!assignments) return [null, null, null, null, true];
+
   const courses = filteredCourses.map((c) => c["name"]);
   const categories = mapCategoryContents(assignments, courses);
   const tabs = mapTabCategories(courses);
-  const errored = !assignments;
 
-  return [assignments, courses, categories, tabs, errored];
+  return [assignments, courses, categories, tabs, false];
 }
 
 // ----------- Tab and category mappers  ----------- //

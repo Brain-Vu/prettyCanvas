@@ -24,4 +24,4 @@ While my original intent was a website, I soon realized that the SeattleU Canvas
 
 ## Future work / WIP
 
-I am currently working on getting substantive tests done. I am additionally trying to get a quick help button implemented.
+I am currently working on getting substantive tests done.

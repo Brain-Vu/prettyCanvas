@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import List from "@mui/material/List";
 import AssignmentCard from "./AssignmentCard";
+import { Divider } from "@mui/material";
 
 function AssignmentList({ assignments, tabName }) {
   return (
@@ -17,18 +18,21 @@ function AssignmentList({ assignments, tabName }) {
                 assignment["submission"]["workflow_state"] == "graded";
 
               return (
-                <AssignmentCard
-                  assignmentName={assignment["name"]}
-                  course={assignment["course_name"]}
-                  dueDate={assignment["due_at"]}
-                  url={assignment["html_url"]}
-                  tabName={tabName}
-                  hasSubmitTime={hasSubmitTime}
-                  submitTime={assignment["submission"]["submitted_at"]}
-                  isGraded={isGraded}
-                  score={isGraded ? assignment["submission"]["score"] : 0}
-                  totalPoints={assignment["points_possible"]}
-                />
+                <>
+                  <AssignmentCard
+                    assignmentName={assignment["name"]}
+                    course={assignment["course_name"]}
+                    dueDate={assignment["due_at"]}
+                    url={assignment["html_url"]}
+                    tabName={tabName}
+                    hasSubmitTime={hasSubmitTime}
+                    submitTime={assignment["submission"]["submitted_at"]}
+                    isGraded={isGraded}
+                    score={isGraded ? assignment["submission"]["score"] : 0}
+                    totalPoints={assignment["points_possible"]}
+                  />
+                  <Divider />
+                </>
               );
             })
           : "Nothing for now"}

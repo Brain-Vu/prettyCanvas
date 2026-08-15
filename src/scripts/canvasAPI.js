@@ -48,8 +48,9 @@ export async function getAllAssignmentsAsync(courses) {
       allAssignments.push(...assignments);
     } catch (error) {
       console.log(
-        `Failed to retrieve assignments for course: ${id}. Error message: ${error.message}`,
+        `Failed to retrieve assignments for course: ${course.id}. Error message: ${error.message}`,
       );
+      throw error;
     }
   }
   return allAssignments;

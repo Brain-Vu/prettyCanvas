@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+import { useState } from "react";
 import { Tabs, Tab, Box, CircularProgress } from "@mui/material";
 import CategoryList from "./CategoryList";
 import { tabOrder } from "../scripts/UILogic";
@@ -47,6 +46,7 @@ export default function TabList({
 
       {tabNames.map((tabName, myTabIndex) => (
         <CustomTabPanel currTabIndex={tabIndex} myTabIndex={myTabIndex}>
+          
           <CategoryList
             categoryNames={tabs[tabName]}
             categories={categories}
