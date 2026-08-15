@@ -34,25 +34,39 @@ export async function getAssignmentsAsync(ID) {
  * @returns {array} An array of assignment JSONs
  */
 export async function getAllAssignmentsAsync(courses) {
-  let allAssignments = [];
+  const allAssignments = [];
 
-  for (const course of courses) {
-    try {
-      const courseID = course["id"];
-      let assignments = await getAssignmentsAsync(courseID);
-      // adding course ID as an additional field
-      for (let assignment of assignments) {
-        assignment["course_name"] = course["name"];
+  async function getAssignmentsConcur() {
+    const courseAssignments = {};
+    for (const course of courses) {
+      try {
+        const results = await Promise.all(
+          courses.map(async (course) => {
+            const assignments = await getAssignmentsAsync(course["id"]);
+            return [course["name"], assignments];
+          }),
+        );
+        return Object.fromEntries(results);
+      } catch (error) {
+        console.log(
+          `Failed to retrieve assignments for course: ${course.id}. Error message: ${error.message}`,
+        );
+        throw error;
       }
-      // adding the score as an additional field
-      allAssignments.push(...assignments);
-    } catch (error) {
-      console.log(
-        `Failed to retrieve assignments for course: ${course.id}. Error message: ${error.message}`,
-      );
-      throw error;
     }
+    return courseAssignments;
   }
+
+  const courseAssignments = await getAssignmentsConcur();
+
+  for (const [courseName, assignments] of Object.entries(courseAssignments)) {
+    // adding course name as an additional field
+    for (let assignment of assignments) {
+      assignment["course_name"] = courseName;
+    }
+    allAssignments.push(...assignments);
+  }
+
   return allAssignments;
 }
 

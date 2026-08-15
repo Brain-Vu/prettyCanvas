@@ -21,7 +21,3 @@ While my original intent was a website, I soon realized that the SeattleU Canvas
 ![chrome extension page](readme_images/chrome_extensions_page.png)
 
   3. Finally, click on 'Load unpacked' and select the 'dist' folder (it should exist as a subfolder within this project directory)
-
-## Future work / WIP
-
-I am currently working on getting substantive tests done.

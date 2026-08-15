@@ -11,7 +11,6 @@ function AssignmentCard({
   dueDate,
   url,
   tabName,
-  isLate, 
   hasSubmitTime,
   submitTime,
   isGraded,

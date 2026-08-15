@@ -1,12 +1,10 @@
-
-
 /*
  * Returns the tab order that should be displayed
- *  
+ *
  * @returns {array} Array of tabs that dictate the order that should be displayed
-*/
-export function tabOrder(){
-  return ["Upcoming", "Late", "Completed", "Undated"]
+ */
+export function tabOrder() {
+  return ["Upcoming", "Late", "Completed", "Undated"];
 }
 
 /*
@@ -81,7 +79,9 @@ export function formatTimestamp(timestamp) {
  * @param {string} timestamp - An ISO string
  * @returns {string} A formatted string to display as the due date
  */
-export function formatDueDate(timestamp) {
+export function formatDueDate(timestamp, submitted = false) {
+  if (submitted) return `Assignment was due on ${formatTimestamp(timestamp)}`;
+
   const due = new Date(timestamp);
   if (!timestamp) return "Undated";
 

@@ -1,4 +1,5 @@
 import * as canvasAPI from "./canvasAPI.js";
+import * as testing from "../../test/oldCoursesFilter.js";
 
 /*
  * Driver function to access assignments, courses, categories, tabs, and potential error
@@ -11,26 +12,6 @@ import * as canvasAPI from "./canvasAPI.js";
  *    - errored - Boolean that flags if there was trouble in loading the content from Canvas
  */
 export async function loadContent() {
-  // test function to make sure that classes from Spring quarter are populated
-  function filterCourses(courses, by) {
-    let filterFunc;
-    if (by == "before end") {
-      const today = new Date();
-      filterFunc = (course) => {
-        if (course["term"] == null || course["term"]["end_at"] == null)
-          return false;
-        const courseEnd = new Date(course["term"]["end_at"]);
-        // hard coding term to Spring for testing purposes
-        return (
-          courseEnd > today ||
-          course["term"]["name"] == "25WQ Winter Quarter 2025"
-        );
-      };
-    }
-    return courses.filter(filterFunc);
-  }
-
-  // API callers
   async function getCourses() {
     let courses;
     try {
@@ -56,7 +37,8 @@ export async function loadContent() {
   const courseObj = await getCourses();
   if (!courseObj) return [null, null, null, null, true];
 
-  const filteredCourses = filterCourses(courseObj, "before end");
+  // remove 'testing' as needed
+  const filteredCourses = testing.filterCourses(courseObj, "before end");
 
   const assignments = await getAssignments(filteredCourses);
   if (!assignments) return [null, null, null, null, true];
@@ -93,6 +75,8 @@ export function mapTabCategories(courses) {
  */
 export function mapCategoryContents(assignments, courses) {
   let categories = {};
+
+  // current implementation only allows for unique category names across all tabs
 
   const completed = filterAssignments(assignments, "completed");
 
@@ -165,20 +149,21 @@ export function filterCourses(courses, by) {
  * @returns {array} Sorted assignments
  */
 export function sortAssignments(assignments, by) {
+  console.log(assignments)
   let sortFunc;
   if (by == "earliest")
     sortFunc = (a, b) => {
       if (!a["due_at"] && !b["due_at"]) return 0;
       else if (!a["due_at"]) return 1;
       else if (!b["due_at"]) return -1;
-      a["due_at"].localeCompare(b["due_at"]);
+      return a["due_at"].localeCompare(b["due_at"]);
     };
   else if (by == "latest")
     sortFunc = (a, b) => {
       if (!a["due_at"] && !b["due_at"]) return 0;
       else if (!a["due_at"]) return 1;
       else if (!b["due_at"]) return -1;
-      b["due_at"].localeCompare(a["due_at"]);
+      return b["due_at"].localeCompare(a["due_at"]);
     };
   return assignments.sort(sortFunc);
 }
